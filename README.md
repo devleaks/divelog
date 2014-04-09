@@ -77,10 +77,10 @@ Import divelog from a CSV file.
 
 From "user settings", import and parse CSV. Sample line to import (option to ignore first line):
 
-`
+```
 "Date","Time","Site","Depth","Duration","Access","Tags","Buddies","Notes"
 "15/09/2013","15:45","Vodelée","36","38","1","vodelée","rackham, Ann","Belle plongée"
-`
+```
 
 Avoid depth and duration decimal fraction. Import may fail depending on your global PHP local settings for data/number format.
 
@@ -96,8 +96,8 @@ It allows users to add new events or register (partcipate) to existing ones.
 
 If enabled on your Elgg site, the **event_calendar** module will work with divelog.
 
-To  link event_calendar to Divelog, you need to enable _event_types_ in event_calendar
-and register a new type of event: Dives! The name of the event type need to be "divelog".
+To  link event_calendar to Divelog, you need to enable `event_types` in event_calendar
+and register a new type of event: Dives! The name of the event type need to be `divelog`.
 
 Users of Ellg will be able to create a special type of event (_dives_),
 and there will be an automatic conversion of such a dive _event_ to a loggued dive in your logbook.
@@ -113,11 +113,12 @@ divelog will establish a relationship between your divelog and your dive picture
 
 A link will appears in the dive detail page to point at recorded pictures or videos.
 
+(Note: Due to recent modification of hypeGallery, this option is temporarily unavailable.)
 
 
 # Technical Notes #
 
-The core of this module is the Bookmarks plugins, with a kin of a global substitution of the word Divelog for Bookmark.
+The core of this module is the Bookmarks plugins, with a kind of a global substitution of the word Divelog for Bookmark.
 After, a few features were slowly added, like convertion of Events to Divelogs, and bookmarks specific features were removed.
 
 
@@ -146,9 +147,9 @@ tags | Dive tags
 
 When a dive buddy is the username of an existing ElggUser, it appears as a link to its dive logbook, and the relationship
 
-`
+```php
 add_entity_relationship($buddy_GUID, "divelog_buddy", $divelog_GUID)
-`
+```
 
 is created. It is easier to find divelogs where the user appears.
 
@@ -179,9 +180,9 @@ description | brief_description
 
 When a divelog is created from an event, the relationship
 
-`
+```php
 add_entity_relationship($divelog_GUID, "divelog_event_calendar", $event_GUID)
-`
+```
 
 is created.
 
@@ -228,9 +229,9 @@ If in addition to the above,
 they are said to be the _same dive_ and are linked together.
 
 
-`
+```php
 add_entity_relationship($divelog_GUID, "divelog_same_dive", $album_GUID)
-`
+```
 
 
 # To Do #

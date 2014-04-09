@@ -172,7 +172,7 @@ Divelog Field | Event Calendar Field
 dive_site | venue
 dive_date | start_date
 dive_start_time | start_time
-dive_briefing | $briefing
+dive_briefing | briefing
 dive_suggestor | container_guid
 tags | event_tags
 title | title
@@ -193,9 +193,9 @@ When an event has been converted to a planned dive, it no longer appears as an _
 
 When some pictures or videos related to the dive are published in an album, and the relationship
 
-`
+```php
 add_entity_relationship($divelog_GUID, "divelog_media", $album_GUID)
-`
+```
 
 is created.
 
@@ -212,11 +212,12 @@ If two dives have
   * Same date
   * Approximate same dive time
 
-they are said to be dives from the _same club dives_ and are linked together..
+they are said to be dives from the _same club dives_ and are linked together.
 
-`
+
+```php
 add_entity_relationship($divelog_GUID, "divelog_club_dive", $album_GUID)
-`
+```
 
 #### Same Dive ####
 
@@ -226,8 +227,7 @@ If in addition to the above,
   * the dive depth is about the same (within a reasonable depth difference),
   * the duration of the dive is about the same (within a reasonable duration difference),
 
-they are said to be the _same dive_ and are linked together.
-
+they are said to be the _same dive_ (recorded by two buddies) and are linked together.
 
 ```php
 add_entity_relationship($divelog_GUID, "divelog_same_dive", $album_GUID)
@@ -238,8 +238,7 @@ add_entity_relationship($divelog_GUID, "divelog_same_dive", $album_GUID)
 
 ## Auto create(/delete) divelog upon event calendar subscription ##
 
-* User: Automatically insert a new divelog (planned dive) when user confirm registration to events of type event_calendar:type:divelog?
-
+* User: Automatically insert a new divelog (planned dive) when user confirm registration to events of type `event_calendar:type:divelog`?
 * User: Accept new divelog from buddies when they create a new dive log and I am listed a buddy and I have not added the dive yet.
 
 ## Issues ##

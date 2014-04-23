@@ -44,8 +44,6 @@ Voir et commenter cette plongée:
 	'river:commented:object:divelog' => "une plongée",
 	'river:create:object:divelog' => '%s a partagé la plongée %s',
 	'river:comment:object:divelog' => '%s a commenté la plongée %s',
-	'divelog:river:annotate' => 'a commenté cette plongée',
-	'divelog:river:item' => 'une plongée',
 	'item:object:divelog' => "Plongées",
 
 	'divelog:sitemenu' => "Plongées",
@@ -148,10 +146,43 @@ Voir et commenter cette plongée:
 
 
 	/**
-	 * Calendar Event Types
+	 * bulk divelog upload
+	 */
+	'divelog:upload' => "Chargement de plongées à partir d'un fichier",
+	'divelog:upload:linktopage' => "Charger un fichier de plongées",
+	'divelog:upload:help' => "Pour charger vos anciennes plongées, le fichier doit être au format tel que ci-dessous.
+Si la première ligne contient le nom des champs, veuillez cocher la case Ignorer la première ligne.
+L'ordre des champs n'a pas d'importance si les entêtes sont présentes.
+Le nom des entêtes doit scrupuleusement respecter les noms ci-dessous.
+Les colonnes ou champs notes, access et tags sont optionnelles. Les autres sont obligatoires.",
+	'divelog:upload:filename' => "Fichier contenant les plongées",
+	'divelog:upload:ignorefirst' => "Ignorer la première ligne?",
+	'divelog:upload:encoding' => "Encodage du fichier de texte",
+	'divelog:upload:delimiter' => "Séparateur entre les champs (le contenu du champ ne peut pas contenir ce séparateur)",
+	'divelog:upload:confirm' => "Vérifier les plongées",
+	'divelog:upload:create_divelogs' => "Importer les plongées",
+	'divelog:upload:process_report' => "Traitement du fichier",
+	'divelog:upload:creation_report' => "Création des plongées",
+	'divelog:upload:number_of_divelogs'	=> "Nombre de plongées dans le fichier",
+	'divelog:upload:number_of_created_divelogs'	=> "Nombre de plongées créées",
+	'divelog:upload:number_of_errors'	=> "Erreurs détectées",
+	'divelog:upload:statusok' => 'OK',
+	'divelog:upload:create_success' => 'Créée',
+	'divelog:upload:no_created_divelogs' => "Aucune plongée à créer.",
+	'divelog:error:cannot_open_file' => "Impossible de traîter le fichier",
+	'divelog:error:wrong_csv_format' => "Mauvais format CSV",
+	'divelog:upload:viewuploaded' => "Voir toutes mes plongées",
+	'divelog:upload:see_divelogs' => "Voir toutes mes plongées",
+	'divelog:upload:see_divelog' => "Voir la plongée",
+	'divelog:upload:new' => "a chargé %s nouvelles plongées dans son carnet.",
+
+
+	/**
+	 * Calendar Event Hooks
 	 *    Note: event_calendar ajoute le préfixe 'event_calendar:type:'.
 	 *          donc dans le panneau d'administration, pour les types d'événement, il suffit de mentionner divelog, restaurant, meeting, etc.
 	 **/
+	// Calendar Event Types
 	'divelog:Planned'			=> 'Plongée planifiée',
 	'divelog:planned'			=> 'plongée planifiée',
 	'divelog:short:planned'		=> 'planifiée',
@@ -184,34 +215,14 @@ Voir et commenter cette plongée:
 	'divelog:copy_hint' => "Créer une copie de cette plongée dans mon logbook",
 	'divelog:copy:failed' => "La création de la copie de la plongée a échoué. Veuillez réessayer.",
 
-	// bulk divelog upload
-	'divelog:upload' => "Chargement de plongées à partir d'un fichier",
-	'divelog:upload:linktopage' => "Charger un fichier de plongées",
-	'divelog:upload:help' => "Pour charger vos anciennes plongées, le fichier doit être au format tel que ci-dessous.
-Si la première ligne contient le nom des champs, veuillez cocher la case Ignorer la première ligne.
-L'ordre des champs n'a pas d'importance si les entêtes sont présentes.
-Le nom des entêtes doit scrupuleusement respecter les noms ci-dessous.
-Les colonnes ou champs notes, access et tags sont optionnelles. Les autres sont obligatoires.",
-	'divelog:upload:filename' => "Fichier contenant les plongées",
-	'divelog:upload:ignorefirst' => "Ignorer la première ligne?",
-	'divelog:upload:encoding' => "Encodage du fichier de texte",
-	'divelog:upload:delimiter' => "Séparateur entre les champs (le contenu du champ ne peut pas contenir ce séparateur)",
-	'divelog:upload:confirm' => "Vérifier les plongées",
-	'divelog:upload:create_divelogs' => "Importer les plongées",
-	'divelog:upload:process_report' => "Traitement du fichier",
-	'divelog:upload:creation_report' => "Création des plongées",
-	'divelog:upload:number_of_divelogs'	=> "Nombre de plongées dans le fichier",
-	'divelog:upload:number_of_created_divelogs'	=> "Nombre de plongées créées",
-	'divelog:upload:number_of_errors'	=> "Erreurs détectées",
-	'divelog:upload:statusok' => 'OK',
-	'divelog:upload:create_success' => 'Créée',
-	'divelog:upload:no_created_divelogs' => "Aucune plongée à créer.",
-	'divelog:error:cannot_open_file' => "Impossible de traîter le fichier",
-	'divelog:error:wrong_csv_format' => "Mauvais format CSV",
-	'divelog:upload:viewuploaded' => "Voir toutes mes plongées",
-	'divelog:upload:see_divelogs' => "Voir toutes mes plongées",
-	'divelog:upload:see_divelog' => "Voir la plongée",
-	'divelog:upload:new' => "a chargé %s nouvelles plongées dans son carnet.",
+	/**
+	 * hypeGallery Hooks
+	 */
+	'divelog:hypeGallery:date_format' => "%G-%m-%d",
+	'divelog:hypeGallery:category' => "plongée",
+
+	'divelog:nogallery'	=> "Il n'y a pas de photos.",
+	'divelog:gallery'	=> "Photos:",
 
 );
 

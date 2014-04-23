@@ -84,6 +84,8 @@ HTML;
 		'body' => $body,
 	));
 
+	echo elgg_view('object/gallery', array('entity' => $divelog));
+
 } elseif (elgg_in_context('gallery')) {
 
 	// gallery view	

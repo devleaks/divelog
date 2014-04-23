@@ -31,8 +31,12 @@ $dive_in_future = ( ($dive_date + $dive_start_time*60) > time());
 </div>
 
 <div>
+<!--
+<?php //echo elgg_view("event_calendar/input/date_local",array('timestamp'=>TRUE, 'autocomplete'=>'off','class'=>'event-calendar-compressed-date','name' => 'dive_date','value'=>$dive_date));?>
+-->
+
     <label><?php echo elgg_echo("divelog:date"); ?></label><br />
-    <?php echo elgg_view("event_calendar/input/date_local",array('timestamp'=>TRUE, 'autocomplete'=>'off','class'=>'event-calendar-compressed-date','name' => 'dive_date','value'=>$dive_date));?>
+    <?php echo elgg_view("input/date",array('name' => 'dive_date','value'=>$dive_date));?>
 	<?php echo elgg_view("input/timepicker",array('name' => 'dive_start_time','value'=>$dive_start_time));?>
 </div>
 
@@ -52,7 +56,8 @@ $dive_in_future = ( ($dive_date + $dive_start_time*60) > time());
 </div>
 
 <div>
-    <?php echo elgg_view('input/checkbox',array('name' => 'dive_media', 'value' => $dive_media)); ?>
+    <?php echo elgg_view('input/checkbox',array('name' => 'dive_media',
+		'checked' => $dive_media ? $dive_media : false)); ?>
     <label><?php echo elgg_echo("divelog:media"); ?></label>
 </div>
 

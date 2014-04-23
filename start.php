@@ -214,10 +214,10 @@ function divelog_url_forwarder($page) {
 }
 
 /**
- * Populates the ->getUrl() method for diveloged objects
+ * Populates the ->getUrl() method for Divelog objects
  *
- * @param ElggEntity $entity The diveloged object
- * @return string diveloged item URL
+ * @param ElggEntity $entity The Divelog object
+ * @return string Divelog item URL
  */
 function divelog_url($entity) {
 	global $CONFIG;

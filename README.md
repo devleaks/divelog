@@ -17,7 +17,10 @@ The divelog module may be integrated with two other modules: event_calendar and 
 
 # User's Manual #
 
+
+
 ## Tabs ##
+
 
 ### All Dives ###
 
@@ -45,7 +48,6 @@ These events can be converted to planned dive by pressing the _Convert to planne
 When editing dives with date in the future (planned dives), the following occurs:
 When a dive is planned (date in the future), notes are saved as _brieifing_ notes.
 When a dive is completed (date in the past), notes are saved as _debriefing_ notes and briefing notes can no longer by edited.
-
 
 ### Statistics ###
 
@@ -82,14 +84,15 @@ From "user settings", import and parse CSV. Sample line to import (option to ign
 "15/09/2013","15:45","Vodelée","36","38","1","vodelée","rackham, Ann","Belle plongée"
 ```
 
-Avoid depth and duration decimal fraction. Import may fail depending on your global PHP local settings for data/number format.
+Avoid depth and duration decimal fraction.
+Import may fail depending on your global PHP local settings for data/number format.
 
-Dive date and site are mandatory. All other fields are optional.
+Dive date and site are mandatory.
+All other fields are optional.
 
 
 
-
-## Interface to event_calendar Modules ##
+## Interface to event_calendar Module ##
 
 Event_calendar is a general purpose event and calendar module.
 It allows users to add new events or register (partcipate) to existing ones.
@@ -104,16 +107,22 @@ and there will be an automatic conversion of such a dive _event_ to a loggued di
 
 
 
-## Interface to hypeGallery Modules ##
+## Interface to hypeGallery Module ##
 
 **hypeGallery** is a general purpose Photo gallery application.
 
 If you posted pictures of the dive on Elgg, and checked the "Dive Pictures & Videos" checkbox in your logbook,
 divelog will establish a relationship between your divelog and your dive pictures in your logbook.
 
+To link hypeGallery to divelog, the album must satisfy the following conditions:
+(Go to _Edit Album_, press the _(i) Add other details_ link to reveal more album metadata):
+
+hypeGallery Album Field | Divelog Requirement
+date | Must correspond to the 'dive_date' of divelog.
+categories | Must contain the text _divelog_.
+
 A link will appears in the dive detail page to point at recorded pictures or videos.
 
-(Note: Due to recent modification of hypeGallery, this option is temporarily unavailable.)
 
 
 # Technical Notes #
@@ -191,7 +200,7 @@ When an event has been converted to a planned dive, it no longer appears as an _
 
 ### Relation to hypeGallery ###
 
-When some pictures or videos related to the dive are published in an album, and the relationship
+When  pictures or videos related to the dive are published in an album, the relationship
 
 ```php
 add_entity_relationship($divelog_GUID, "divelog_media", $album_GUID)
@@ -199,10 +208,26 @@ add_entity_relationship($divelog_GUID, "divelog_media", $album_GUID)
 
 is created.
 
+Linked album are displayed in the dive log detail page (only).
+
+To link album to divelog, the album must have the following metadata
+(Go to Edit Album, press the "Additional information" link to reveal more album metadata):
+
+hypeGallery Album Field | Divelog Requirement
+date | Must correspond to the 'dive_date' of divelog.
+categories | Must contain the text of localized string 'divelog:hypeGallery:category'.
+
+Notes: Currently, search for corresponding album are performed at divelog save time,
+and when dive log detail page is requested.
+The latest is not the most efficient method, and work around are in progress.
+
 
 ### Relation to other Dives ###
 
 (Work in progress. The goal to establish relationship between dives at the same site the same day.)
+
+(When completed) Divelog will display related dives in the dive log detail page.
+
 
 #### Club Dives ####
 
@@ -214,10 +239,10 @@ If two dives have
 
 they are said to be dives from the _same club dives_ and are linked together.
 
-
 ```php
 add_entity_relationship($divelog_GUID, "divelog_club_dive", $album_GUID)
 ```
+
 
 #### Same Dive ####
 
@@ -234,12 +259,19 @@ add_entity_relationship($divelog_GUID, "divelog_same_dive", $album_GUID)
 ```
 
 
+
 # To Do #
 
 ## Auto create(/delete) divelog upon event calendar subscription ##
 
 * User: Automatically insert a new divelog (planned dive) when user confirm registration to events of type `event_calendar:type:divelog`?
 * User: Accept new divelog from buddies when they create a new dive log and I am listed a buddy and I have not added the dive yet.
+
+* Create 'club_dive' and 'same_dive' relationships.
+
+* Update relations to hypeGallery album when they are created, updated, or deleted.
+
+* Be nice to other modules and provide hooks on divelog creation, update, deletion.
 
 ## Issues ##
 

@@ -202,6 +202,51 @@ function get_future_divelog_events($existing_planned_divelog_guids) {
 
 
 /**
+ * Establish relationships "divelog_club_dive" and "divelog_same_dive" to other divelogs.
+ *
+ * @param ElggObject $divelog A divelog object.
+ */
+function get_divelog_related_dives($divelog) {
+	//todo
+}
+
+
+/**
+ * Create relationship "divelog_media" between divelog and hype galleries.
+ *
+ * @param ElggObject $divelog A divelog object.
+ */
+function get_divelog_galleries($divelog) {
+	$dive_date = strftime(elgg_echo('divelog:hypeGallery:date_format'), $divelog->dive_date);
+
+	$options = array(
+		'type' => 'object',
+		'subtype' => 'hjalbum',
+		'limit' => 10,
+		'metadata_name_value_pairs' => array(
+			array(
+				'name' => 'date',
+				'value' => $dive_date,
+				'operand' => '='
+			),
+			array(
+				'name' => 'categories',
+				'value' => elgg_echo('divelog:hypeGallery:category'),
+				'operand' => '=' //to be corrected. should be 'IN'?
+			)
+		),
+	);
+
+	if ($galleries =  elgg_get_entities_from_metadata($options)) {
+		foreach($galleries as $gallery) {
+			if (!check_entity_relationship($divelog->getGUID(), "divelog_media", $gallery->getGUID())) {
+				add_entity_relationship($divelog->getGUID(), "divelog_media", $gallery->getGUID());
+			}
+		}
+	}
+}
+
+/**
  * Print dive parameters or nothing ('').
  *
  * @param ElggObject $divelog A divelog object.

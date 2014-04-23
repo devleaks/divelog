@@ -14,7 +14,7 @@ $dive_start_time = get_input('dive_start_time');
 $dive_depth = get_input('dive_depth');
 $dive_duration = get_input('dive_duration');
 $dive_buddies = get_input('dive_buddies');
-$dive_pictures = get_input('dive_pictures');
+$dive_media = get_input('dive_media');
 $dive_briefing = get_input('dive_briefing');
 $dive_debriefing = get_input('dive_debriefing');
 
@@ -41,8 +41,12 @@ if ($guid == 0) {
 	}
 }
 
+if($datets = strtotime($dive_date)) {
+	$divelog->dive_date = $datets; //$dive_date;
+} else {
+	$divelog->dive_date = $dive_date;
+}
 $divelog->dive_site = $dive_site;
-$divelog->dive_date = $dive_date;
 $divelog->dive_start_time = $dive_start_time;
 $divelog->dive_depth = $dive_depth;
 $divelog->dive_duration = $dive_duration;
@@ -83,6 +87,9 @@ if ($divelog->save()) {
 				add_entity_relationship($elgg_diver->getGUID(), "divelog_buddy", $divelog->getGUID());
 		}
 	}
+	
+	get_divelog_galleries($divelog);
+	get_divelog_related_dives($divelog);
 
 	system_message(elgg_echo('divelog:save:success'));
 

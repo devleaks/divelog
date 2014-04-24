@@ -97,7 +97,7 @@ class UploadDivelogs {
 			/// Check that there are no empty headers. This can happen if there are delimiters at the end of the file
 			foreach ($headers as $header) {
 				if (!empty($header)) { // remove " and '
-					$headers2[] = trim(trim($header, "'"), '"');
+					$headers2[] = strtolower( trim(trim($header, "'"), '"') );
 				}
 			}
 			$headers = $headers2;
@@ -120,7 +120,9 @@ class UploadDivelogs {
 		$divelogs = array();
 
 		/// Go through the divelog rows
-		for ($i = 1; $i < count($rows); $i++) {
+		for ($i = 0; $i < count($rows); $i++) {
+			if($this->ignorefirst and ($i == 0) ) continue; // skip first line
+			
 			$rows[$i] = trim($rows[$i]);
 			if (empty($rows[$i])) {
 				continue;

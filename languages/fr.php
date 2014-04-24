@@ -133,20 +133,18 @@ Voir et commenter cette plongée:
 	/**
 	 * Status messages
 	 */
+	// success
 	'divelog:save:success' => "Votre plongée a été enregistrée.",
 	'divelog:delete:success' => "Votre plongée a été supprimée.",
 
-
-	/**
-	 * Error messages
-	 */
+	// errors
 	'divelog:save:failed' => "Votre plongée n'a pu être correctement enregistrée. Vérifiez que les paramètres entrés de la plongée soient corrects et réessayez.",
 	'divelog:delete:failed' => "Votre plongée n'a pu être supprimée. Merci de réessayer.",
 	'divelog:save:invalid' => "Des paramètres de la plongée sont invalides et elle ne peut être enregistrée. Merci de vérifier vos paramètres.",
 
 
 	/**
-	 * bulk divelog upload
+	 * Divelog upload
 	 */
 	'divelog:upload' => "Chargement de plongées à partir d'un fichier",
 	'divelog:upload:linktopage' => "Charger un fichier de plongées",
@@ -214,6 +212,7 @@ Les colonnes ou champs notes, access et tags sont optionnelles. Les autres sont 
 	'divelog:copy' => "Copier",
 	'divelog:copy_hint' => "Créer une copie de cette plongée dans mon logbook",
 	'divelog:copy:failed' => "La création de la copie de la plongée a échoué. Veuillez réessayer.",
+
 
 	/**
 	 * hypeGallery Hooks

@@ -46,7 +46,7 @@ View and comment on the new dive log:
 	'river:comment:object:divelog' => '%s commented on dive %s',
 	'item:object:divelog' => 'Dive Logs',
 
-	'divelog:sitemenu' => "Dive log",
+	'divelog:sitemenu' => "Dive Logs",
 	'divelog:group' => 'Group dive logs',
 	'divelog:enabledive logs' => 'Enable group dive logs',
 	'divelog:nogroup' => 'This group does not have any dive logs yet',
@@ -133,13 +133,11 @@ View and comment on the new dive log:
 	/**
 	 * Status messages
 	 */
-	'divelog:save_ok' => "Your dive is loggued.",
-	'divelog:save_notok' => "Your dive could not be logged (error).",
-	
+	// success
+	'divelog:save:success' => "Your dive log has been recorded.",
+	'divelog:delete:success' => "Your dive log has been deleted.",
 
-	/**
-	 * Error messages
-	 */
+	// errors
 	'divelog:save:failed' => "Your dive log could not be saved. Make sure you've entered a site and date and then try again.",
 	'divelog:save:invalid' => "The site of the dive log is invalid and could not be saved.",
 	'divelog:delete:failed' => "Your dive log could not be deleted. Please try again.",

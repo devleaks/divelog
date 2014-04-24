@@ -35,11 +35,12 @@ $user_units = get_user_units();
 	echo elgg_echo('divelog:create_from_event') . ' ';
 ?>
 </div>
-
+<p></p>
+<p></p>
 <div>
 <?php
 	echo elgg_view_icon('divelog');
-	echo '&nbsp;';
+	echo '&nbsp;&nbsp;';
 	echo elgg_view('output/url', array(
 				'href' => elgg_get_site_url().'divelog/upload',
 				'text' => elgg_echo('divelog:upload:linktopage'),

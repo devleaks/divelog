@@ -81,14 +81,33 @@ From "user settings", import and parse CSV. Sample line to import (option to ign
 
 ```
 "Date","Time","Site","Depth","Duration","Access","Tags","Buddies","Notes"
-"15/09/2013","15:45","Vodelée","36","38","1","vodelée","rackham, Ann","Belle plongée"
+"15/04/1971","15:45","Blue Hole, Belize","39","44","1","belize","Albert Falco","Deep dive."
 ```
 
 Avoid depth and duration decimal fraction.
-Import may fail depending on your global PHP local settings for data/number format.
+
+Date must be in the DD/MM/YYYY format. Hours must be in the HH:MM where HH is in 24 hour format (no 3PM but rather 15:).
+Units used in the CSV file (for depth) must match unit set for current user.
+
+Notes: Import may fail depending on your global PHP local settings for data/number format.
 
 Dive date and site are mandatory.
 All other fields are optional.
+
+If the first line does not contain column headings, columns MUST be in the following order:
+
+```php
+date, time, site, depth, duration, access, tags, buddies, notes.
+```
+
+All columns must be present.
+
+The upload process starts be supplying a file, its character encoding, the field separator used, and whether the first line
+of the file contains field names or not.
+
+- The process uploads the file, parses it, and present divelog candidates.
+- Second, the user accept divelog candidates and divelogs are effectively created.
+- Finally, a creation report list imported dives.
 
 
 
@@ -275,5 +294,5 @@ add_entity_relationship($divelog_GUID, "divelog_same_dive", $album_GUID)
 
 ## Issues ##
 
-Importing CSV files has not been extensively tested.
-Issues remains and will be addressed in future releases.
+Importing CSV files has not been extensively tested. Issues remains and will be addressed in future releases.
+If sticking to stated rules above, should work smoothly. But exceptions are not handled.

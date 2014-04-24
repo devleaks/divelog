@@ -35,7 +35,14 @@ if($existing_rels = elgg_get_entities_from_relationship($options)) {
 
 if ($galleries) {
 	echo elgg_echo('divelog:gallery');
-	echo elgg_view_entity_list($galleries, array('full_view' => false));
+	
+	foreach($galleries as $gallery) {
+		// display nice stream
+		//echo $gallery->title;
+		echo elgg_view('object/hjalbum', array('entity' => $gallery, 'list_type' => 'river'));
+	}
+	
+	//echo elgg_view_entity_list($galleries, array('full_view' => false));
 } else {
 	echo elgg_echo('divelog:nogallery');
 }

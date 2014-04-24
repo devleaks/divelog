@@ -9,7 +9,7 @@ echo elgg_echo('divelog:upload:help'); ?>
 <p/>
 <p class="code">
 "date","time","site","depth","duration","access","tags","buddies","notes"<br/>
-"15/09/2013","15:45","Vodelée","36","38","1","vodelée","rackham, Ann","Belle plongée"<br/>
+"15/04/1971","15:45","Blue Hole, Belize","39","44","1","belize","Albert Falco","Deep dive, only half way to bottom."<br/>
 ...
 </p>
 

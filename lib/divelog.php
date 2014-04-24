@@ -206,7 +206,7 @@ function get_future_divelog_events($existing_planned_divelog_guids) {
  *
  * @param ElggObject $divelog A divelog object.
  */
-function get_divelog_related_dives($divelog) {
+function set_divelog_related_dives($divelog) {
 	//todo
 }
 
@@ -216,7 +216,7 @@ function get_divelog_related_dives($divelog) {
  *
  * @param ElggObject $divelog A divelog object.
  */
-function get_divelog_galleries($divelog) {
+function set_divelog_galleries($divelog) {
 	$dive_date = strftime(elgg_echo('divelog:hypeGallery:date_format'), $divelog->dive_date);
 
 	$options = array(

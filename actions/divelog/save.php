@@ -88,8 +88,8 @@ if ($divelog->save()) {
 		}
 	}
 	
-	get_divelog_galleries($divelog);
-	get_divelog_related_dives($divelog);
+	set_divelog_galleries($divelog);
+	set_divelog_related_dives($divelog);
 
 	system_message(elgg_echo('divelog:save:success'));
 

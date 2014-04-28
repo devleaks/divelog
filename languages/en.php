@@ -125,12 +125,6 @@ View and comment on the new dive log:
 	'divelog:statistics:warning' => "Data is correct is all dives logged properly.",
 
 	/**
-	 * Widget and dive widget
-	 */
-	'divelog:widget:description' => "Show your latest dives.",
-
-
-	/**
 	 * Status messages
 	 */
 	// success
@@ -144,7 +138,7 @@ View and comment on the new dive log:
 	
 
 	/**
-	 * bulk divelog upload
+	 * Divelog upload
 	 */
 	'divelog:upload' => "Upload dives from logbook",
 	'divelog:upload:linktopage' => "Upload logbook file",
@@ -173,6 +167,19 @@ View and comment on the new dive log:
 	'divelog:upload:see_divelogs' => "View all my dives",
 	'divelog:upload:see_divelog' => "View divelog",
 	'divelog:upload:new' => "%s uploaded new dives.",
+
+
+	/**
+	 * Related dives
+	 */
+	'divelog:same_dive:intro' => "These contacts reported the same dive: ",
+	'divelog:club_dive:intro' => "These contacts reported dives at the same time and place: ",
+	
+
+	/**
+	 * Widget and dive widget
+	 */
+	'divelog:widget:description' => "Show your latest dives.",
 
 
 	/**
@@ -212,6 +219,7 @@ View and comment on the new dive log:
 	'divelog:copy' => "Copy",
 	'divelog:copy_hint' => "Create a copy of this dive in my logbook",
 	'divelog:copy:failed' => "The creation of a copy of the dive failed. Please try again.",
+
 
 	/**
 	 * hypeGallery Hooks

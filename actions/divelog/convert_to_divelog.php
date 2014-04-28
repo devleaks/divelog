@@ -32,7 +32,7 @@ if (	elgg_instanceof($event, 'object', 'event_calendar')
 	$divelog->subtype = "divelog";
 	$divelog->container_guid = (int)get_input('container_guid', $_SESSION['user']->getGUID());
 	$divelog->dive_site = $event->venue;
-	$divelog->dive_date = $event->start_date;
+	$divelog->dive_date = $event->start_date - ($event->start_time*60);
 	$divelog->dive_start_time = $event->start_time;
 	$divelog->dive_briefing = $briefing;
 	$divelog->dive_suggestor = $event->container_guid;
@@ -41,7 +41,7 @@ if (	elgg_instanceof($event, 'object', 'event_calendar')
 	$divelog->tags = $event->event_tags;
 	//$divelog->access_id = ACCESS_DEFAULT;
 
-	$divelog->title = divelog_prettyprint($divelog, 'title');
+	$divelog->title = elgg_view('object/dive_text', array('entity'=>$divelog, 'mode'=>'title'));
 	$divelog->description = $event->brief_description;
 
 	if ($divelog->save()) {

@@ -25,6 +25,12 @@ $guid = get_input('guid');
 $share = get_input('share');
 $container_guid = get_input('container_guid', elgg_get_logged_in_user_guid());
 
+if (elgg_is_active_plugin('elgg_tokeninput')) {	// if using token input, a string with comma like 'A, B, C'
+	if(is_array($dive_site)) {					// gets returned as an array of 3 elements {'A', 'B', 'C'}.
+		$dive_site = implode(', ', $dive_site);	// so we need to concatenate them back into one string.
+	}
+}
+
 elgg_make_sticky_form('divelog');
 
 $new = false;
@@ -59,8 +65,8 @@ $divelog->tags = $tagarray;
 
 $divelog->units = get_user_units();
 
-$divelog->title = divelog_prettyprint($divelog, "title");
-$divelog->description = divelog_prettyprint($divelog, "description");
+$divelog->title = elgg_view('object/dive_text', array('entity'=>$divelog, 'mode'=>'title'));
+$divelog->description = elgg_view('object/dive_text', array('entity'=>$divelog, 'mode'=>'description'));
 
 $divelog->access_id = $access_id;
 

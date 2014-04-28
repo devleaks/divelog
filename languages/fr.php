@@ -125,12 +125,6 @@ Voir et commenter cette plongée:
 	'divelog:statistics:warning' => "Veuillez noter que ces données ne sont correctes que si vous avez rentré tous les paramètres pour toutes les plongées.",
 
 	/**
-	 * Widget
-	 */
-	'divelog:widget:description' => "Ce widget affiche vos dernières plongées.",
-
-
-	/**
 	 * Status messages
 	 */
 	// success
@@ -173,6 +167,19 @@ Les colonnes ou champs notes, access et tags sont optionnelles. Les autres sont 
 	'divelog:upload:see_divelogs' => "Voir toutes mes plongées",
 	'divelog:upload:see_divelog' => "Voir la plongée",
 	'divelog:upload:new' => "a chargé %s nouvelles plongées dans son carnet.",
+
+
+	/**
+	 * Related dives
+	 */
+	'divelog:same_dive:intro' => "Ces contacts ont rapporté la même plongée: ",
+	'divelog:club_dive:intro' => "Ces contacts ont plongé près de vous: ",
+	
+
+	/**
+	 * Widget
+	 */
+	'divelog:widget:description' => "Ce widget affiche vos dernières plongées.",
 
 
 	/**

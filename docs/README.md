@@ -26,3 +26,6 @@ There are 3 sample files to check dive upload.
 - Sample1 is the minimum file.
 - Sample2 is closer to realistic csv dive logbook.
 - Sample3 does not have a heading line, so all fields are prensent and required order.
+
+There are also 4 pictures, stolen on the internet without permission,
+if you want to test hypeGallry features.

@@ -15,6 +15,9 @@ function divelog_init() {
 	$root = dirname(__FILE__);
 	elgg_register_library('divelog', "$root/lib/divelog.php");
 
+	elgg_register_library('divelog-min', "$root/lib/divelog-min.php");
+	elgg_load_library('divelog-min');
+	
 	// actions
 	$action_path = "$root/actions/divelog";
 	elgg_register_action('divelog/save', "$action_path/save.php");

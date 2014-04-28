@@ -7,10 +7,12 @@
 elgg_load_library('divelog');
 
 $divelog = $vars['item']->getObjectEntity();
-$vars['excerpt'] = divelog_prettyprint($divelog, "river");
+$vars['excerpt'] = elgg_view('object/dive_text', array('entity'=>$divelog, 'mode'=>'river'));
 
-$attachments = elgg_view('object/gallery', array('entity' => $divelog));
-$vars['attachments'] = $attachments;
+if (is_plugin_enabled('hypeGallery')) {
+	$attachments = elgg_view('object/gallery', array('entity' => $divelog));
+	$vars['attachments'] = $attachments;
+}
 
 $body = elgg_view('river/elements/body', $vars);
 

@@ -26,8 +26,8 @@ if (elgg_instanceof($divelog_src, 'object', 'divelog')) {
 	$divelog->tags 				= $divelog_src->tags;
 	//$divelog->access_id = ACCESS_DEFAULT;
 
-	$divelog->title 			= divelog_prettyprint($divelog_src, 'title');
-	$divelog->description		= divelog_prettyprint($divelog_src, 'desc');
+	$divelog->title 			= elgg_view('object/dive_text', array('entity'=>$divelog_src, 'mode'=>'title'));
+	$divelog->description		= elgg_view('object/dive_text', array('entity'=>$divelog_src, 'mode'=>'description'));
 
 	if ($divelog->save()) {
 		if (is_array($shares) && sizeof($shares) > 0) {

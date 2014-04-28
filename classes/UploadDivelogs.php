@@ -264,8 +264,8 @@ class UploadDivelogs {
 				$new_divelog->dive_debriefing = $divelog['notes'];
 				$new_divelog->access_id = (int)$divelog['access'];
 				$new_divelog->tags = string_to_tag_array($divelog['tags']);
-				$new_divelog->title = divelog_prettyprint($new_divelog, "title");
-				$new_divelog->description = divelog_prettyprint($new_divelog, "description");
+				$new_divelog->title = elgg_view('object/dive_text', array('entity'=>$new_divelog, 'mode'=>'title'));
+				$new_divelog->description = elgg_view('object/dive_text', array('entity'=>$new_divelog, 'mode'=>'description'));
 
 				$guid = $new_divelog->save();
 				if ($guid) {

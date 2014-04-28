@@ -5,11 +5,11 @@
  * @package Divelog
  */
 // once elgg_view stops throwing all sorts of junk into $vars, we can use extract()
-$units = elgg_extract('units', $vars, get_user_units());
+$units = get_user_units();
 
 $dive_site = elgg_extract('dive_site', $vars, '');
-$dive_date = elgg_extract('dive_date', $vars, '');
-$dive_start_time = elgg_extract('dive_start_time', $vars, '');
+$dive_date = elgg_extract('dive_date', $vars, 0);
+$dive_start_time = elgg_extract('dive_start_time', $vars, 0);
 $dive_depth = elgg_extract('dive_depth', $vars, '');
 $dive_duration = elgg_extract('dive_duration', $vars, '');
 $dive_buddies = elgg_extract('dive_buddies', $vars, '');
@@ -27,7 +27,19 @@ $dive_in_future = ( ($dive_date + $dive_start_time*60) > time());
 ?>
 <div>
     <label><?php echo elgg_echo("divelog:site"); ?></label><br />
-    <?php echo elgg_view('input/text',array('name' => 'dive_site', 'value' => $dive_site)); ?>
+    <?php
+	if (elgg_is_active_plugin('elgg_tokeninput')) {
+		echo elgg_view('input/tokeninput', array(
+											'name' => 'dive_site',
+											'value' => $dive_site,
+											'callback' => 'tokenize_dive_sites',
+											'strict' => false,
+											'multiple' => false,
+											'style' => 'width:100%;',
+		));
+	} else {
+		echo elgg_view('input/text',array('name' => 'dive_site', 'value' => $dive_site));
+	}?>
 </div>
 
 <div>
@@ -70,12 +82,14 @@ if($dive_in_future) {
 	// we do not allow to record post data comments, but we pass the hidden field in case someone already recorded something in it.
     echo elgg_view('input/hidden',array('name' => 'dive_debriefing', 'value' => $dive_debriefing));
 } else {
-	// we do not allow to edit pre data comments
-	echo "<label>".elgg_echo("divelog:briefing")."</label><br />";
-    echo elgg_view('output/longtext',array('name' => 'dive_briefing', 'value' => $dive_briefing));
+	// we no longer allow to edit pre dive comments
+	if($dive_briefing) {
+		echo "<label>".elgg_echo("divelog:briefing")."</label><br />";
+	    echo elgg_view('output/longtext',array('name' => 'dive_briefing', 'value' => $dive_briefing));
+	}
 	// we pass the hidden field with existing data in it. (note disabled longtext field does not seem to work.)
     echo elgg_view('input/hidden',array('name' => 'dive_briefing', 'value' => $dive_briefing));
-
+	
 	echo "<label>".elgg_echo("divelog:debriefing")."</label><br />";
     echo elgg_view('input/longtext',array('name' => 'dive_debriefing', 'value' => $dive_debriefing));
 }

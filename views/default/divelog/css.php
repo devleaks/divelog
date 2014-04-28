@@ -37,3 +37,6 @@
 	font-family: Fixed, monospace;
 	font-size: 12px;
 }
+.divelog-data-label {
+	text-decoration: underline;
+}

@@ -104,6 +104,9 @@ function get_future_divelog_events($existing_planned_divelog_guids) {
 		
 		return false;
 	}
+	
+	if (! is_plugin_enabled('event_calendar'))
+		return false;
 
 	// get event_calendar in the future of type 'divelog'.
 	$options = array(
@@ -217,6 +220,9 @@ function set_divelog_related_dives($divelog) {
  * @param ElggObject $divelog A divelog object.
  */
 function set_divelog_galleries($divelog) {
+	if (! is_plugin_enabled('hypeGallery'))
+		return;
+
 	$dive_date = strftime(elgg_echo('divelog:hypeGallery:date_format'), $divelog->dive_date);
 
 	$options = array(
@@ -251,7 +257,7 @@ function set_divelog_galleries($divelog) {
  *
  * @param ElggObject $divelog A divelog object.
  * @param String $mode Pretty Print mode: {full|short|river}
- * @return true or false
+ * @return String
  */
 function dive_params($divelog, $mode) {
 	if(		($divelog->dive_date > time() )
@@ -274,7 +280,7 @@ function dive_params($divelog, $mode) {
  * @return String
  */
 function print_null($value, $before = '', $prompt = '', $after = '', $alternate = '') {
-	return ($value != '') ? $before . ( ($prompt != '') ? $prompt . " " : '' ) . $value . $after
+	return ($value != '') ? $before . ( ($prompt != '') ? "<span class='divelog-data-label'>" .$prompt ."</span>" . " " : '' ) . "<span class='divelog-data-value'>" . $value ."</span>" . $after
 			              : ( ($alternate != '') ? $before . $alternate . $after : '' );
 }
 
@@ -307,7 +313,7 @@ function format_date($date_in) {
  * @param String Comma-separated buddy list.
  * @return String Comma-separated list of buddies, with link to divelog of buddy if Elgg User.
  */
-function divelog_get_buddy_list($buddy_list) {
+function get_buddy_list($buddy_list) {
 	$dive_buddies = explode(',', $buddy_list);
 	$buddies_display = "";
 	foreach($dive_buddies as $diver) {
@@ -320,94 +326,6 @@ function divelog_get_buddy_list($buddy_list) {
 		$buddies_display .= ", ";
 	}
 	return rtrim($buddies_display, ', ');
-}
-
-
-/**
- * Pretty print a divelog. Will later be converted into proper views.
- *
- * @param ElggObject $divelog A divelog object.
- * @param String $mode Pretty Print mode: {full|short|river}
- * @return string
- */
-function divelog_prettyprint($divelog, $mode = "full") {
-	
-	$dive_date = $divelog->dive_date + $divelog->dive_start_time*60;
-	list($dive_date_fmt_long, $dive_date_fmt_short, $dive_time_fmt) = format_date($dive_date);	
-	$dive_in_future = ($divelog->dive_date > time());
-	$buddies_display = divelog_get_buddy_list($divelog->dive_buddies);
-
-	/* alt method to pass args to renderer?
-	echo elgg_view('divelog/'.$mode, array(
-		'dive_prettyprint' => $mode,
-		'dive_date_fmt_long' => $dive_date_fmt_long,
-		'dive_date_fmt_short' => $dive_date_fmt_short,
-		'dive_time_fmt' => $dive_time_fmt,
-		'dive_buddies_fmt' => $buddies_display,
-		'dive_future' => $dive_in_future,
-		'dive_log' => $divelog,
-		));
-	*/
-
-	$str = "";
-
-	switch($mode) {
-		case 'title':	// Just a heading type of info
-		case 'stats':
-			$str = $divelog->dive_site
-					. ", " . elgg_echo("divelog:dive_on") . " " . $dive_date_fmt_short
-					// elgg_view('output/date', array('value' => $divelog->dive_date));
-					//. "(".$curr_year ."/".$dive_year.")+".$num_days."."
-					;
-			if($dive_in_future) {
-				$str .= ' ('.elgg_echo("divelog:short:planned").')';
-			}
-			break;
-			
-		case 'river':	// Additional info for river display. Does not include title info nor comments. Meant to complement title above.
-			$str = elgg_echo("divelog:dive_at") . " " . $dive_time_fmt;
-			if(! $dive_in_future) {
-				$str .=	print_null(dive_params($divelog, $mode), ", ", "", "",
-					strtolower(elgg_echo("divelog:no_dive_params")));
-				$str .= print_null($buddies_display, ", ", elgg_echo("divelog:dive_with"), ".", ".");
-			} else {
-				$str .= ' ('.elgg_echo("divelog:planned").').';
-			}
-			break;
-			
-		case 'full':	// All info in long form, multiline display with <p>.
-			$str = elgg_echo("divelog:prompt:newdive") . " " . elgg_echo("divelog:dive_at") . " " . $divelog->dive_site
-					. ".<br/>" . elgg_echo("divelog:prompt:dive_date") . " " . $dive_date_fmt_long . ", " . $dive_time_fmt;
-					
-			if(! $dive_in_future) {	
-				$str .= '.';			
-				$str .= print_null(dive_params($divelog, $mode), "<br/>", elgg_echo("divelog:prompt:dive_data"), ".",
-									elgg_echo("divelog:no_dive_params"));
-				$str .= print_null($buddies_display, "<br/>", elgg_echo("divelog:prompt:dive_with"), ".");				
-				$str .= print_null($divelog->dive_debriefing, "<br/>", elgg_echo("divelog:prompt:dive_note"));
-			} else {
-				$str .= ' ('.elgg_echo("divelog:planned").').';
-				$str .= print_null($divelog->dive_briefing, ".<br/>", elgg_echo("divelog:prompt:dive_briefing"));
-			}
-			break;
-			
-		default:		// All info in short form
-		case 'short':
-		case 'description':
-			$str = $divelog->dive_site
-					. " "  . elgg_echo("divelog:dive_on") . " " . $dive_date_fmt_short
-					. ", " . $dive_time_fmt;
-			if(! $dive_in_future) {					
-				$str .= print_null(dive_params($divelog, $mode), " (", "", ")");
-				$str .= print_null($buddies_display, " ", elgg_echo("divelog:dive_with"), ".", ".");
-				;
-			} else {
-				$str .= ' ('.elgg_echo("divelog:planned").').';
-			}
-			break;
-	}
-
-	return $str;
 }
 
 

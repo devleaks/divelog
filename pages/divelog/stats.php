@@ -68,7 +68,7 @@ if (!$divelogs) {
 	
 	$diveurl = elgg_view('output/url', array(
 										'href' => elgg_get_site_url()."divelog/view/$divelog_longuest->guid",
-										'text' => divelog_prettyprint($divelog_longuest, 'stats'),
+										'text' => elgg_view('object/dive_text', array('entity'=>$divelog_longuest, 'mode'=>'stats')),
 										'title' => elgg_echo('divelog:statistics:longest'),
 									));
 	$content .= '<div class="divelog-stat"><span class="divelog-stat-prompt">' . elgg_echo('divelog:statistics:longest') . ': </span>';
@@ -77,7 +77,7 @@ if (!$divelogs) {
 
 	$diveurl = elgg_view('output/url', array(
 										'href' => elgg_get_site_url()."divelog/view/$divelog_deepest->guid",
-										'text' => divelog_prettyprint($divelog_deepest, 'stats'),
+										'text' => elgg_view('object/dive_text', array('entity'=>$divelog_deepest, 'mode'=>'stats')),
 										'title' => elgg_echo('divelog:statistics:longest'),
 									));
 	$content .= '<div class="divelog-stat"><span class="divelog-stat-prompt">' . elgg_echo('divelog:statistics:deepest') . ': </span>';

@@ -14,13 +14,11 @@ if (!$divelog) {
 	return;
 }
 
+$dive_in_future = ($divelog->dive_date > time());
+
+//Author
 $owner = $divelog->getOwnerEntity();
 $owner_icon = elgg_view_entity_icon($owner, 'tiny');
-$container = $divelog->getContainerEntity();
-$categories = elgg_view('output/categories', $vars);
-
-$description = divelog_prettyprint($divelog, "full");// elgg_view('output/longtext', array('value' => $divelog->description, 'class' => 'pbl'));
-
 $owner_link = elgg_view('output/url', array(
 	'href' => "divelog/owner/$owner->username",
 	'text' => $owner->name,
@@ -28,8 +26,10 @@ $owner_link = elgg_view('output/url', array(
 ));
 $author_text = elgg_echo('byline', array($owner_link));
 
+//Date
 $date = elgg_view_friendly_time($divelog->time_created);
 
+//Comments
 $comments_count = $divelog->countComments();
 //only display if there are commments
 if ($comments_count != 0) {
@@ -43,23 +43,35 @@ if ($comments_count != 0) {
 	$comments_link = '';
 }
 
-$metadata = elgg_view_menu('entity', array(
-	'entity' => $vars['entity'],
-	'handler' => 'divelog',
-	'sort_by' => 'priority',
-	'class' => 'elgg-menu-hz',
-));
+//Categories
+$categories = elgg_view('output/categories', $vars);
 
-$subtitle = "$author_text $date $comments_link $categories";
+//Description
+$description = elgg_view('object/dive_text', array('entity'=>$divelog, 'mode'=>'full'));
 
-// do not show the metadata and controls in widget view
+//Metadata
 if (elgg_in_context('widgets')) {
+	// do not show the metadata and controls in widget view
 	$metadata = '';
+} else {
+	$metadata = elgg_view_menu('entity', array(
+		'entity' => $vars['entity'],
+		'handler' => 'divelog',
+		'sort_by' => 'priority',
+		'class' => 'elgg-menu-hz',
+	));
 }
 
+//////////////////
+//Views
+//
+$subtitle = "$author_text $date $comments_link $categories";
+
+//////////////////
+//Full no gallery
+//
 if ($full && !elgg_in_context('gallery')) {
 	// full view
-
 	$params = array(
 		'entity' => $divelog,
 		//'title' => false,
@@ -84,11 +96,15 @@ HTML;
 		'body' => $body,
 	));
 
-	echo elgg_view('object/gallery', array('entity' => $divelog));
-
+	if (!$dive_in_future && is_plugin_enabled('hypeGallery')) {
+		echo elgg_view('object/gallery', array('entity' => $divelog));
+	}
+	
+//////////////////
+//Gallery
+//
 } elseif (elgg_in_context('gallery')) {
 
-	// gallery view	
 	echo <<<HTML
 <div class="divelog-gallery-item">
 	<h3>$divelog->title</h3>
@@ -96,10 +112,12 @@ HTML;
 </div>
 HTML;
 
+//////////////////
+//Brief
+//
 } else {
 
-	// brief view
-	$content = elgg_view_icon('divelog') . " " . divelog_prettyprint($divelog, "short");
+	$content = elgg_view_icon('divelog') . " " . elgg_view('object/dive_text', array('entity'=>$divelog, 'mode'=>'short'));
 	$params = array(
 		'entity' => $divelog,
 		'metadata' => $metadata,

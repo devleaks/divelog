@@ -4,6 +4,8 @@
  *
  * @package Divelog
  */
+if (! is_plugin_enabled('hypeGallery'))
+	return;
 
 elgg_load_library('divelog');
 

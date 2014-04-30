@@ -316,7 +316,7 @@ function divelog_entity_menu_setup ($hook, $type, $return, $params) {
 				'text' => elgg_echo('divelog:convert'),
 				'title' => elgg_echo('divelog:convert_hint'),
 				'href' => elgg_add_action_tokens_to_url("action/divelog/convert_to_divelog?guid={$entity->guid}"),
-				'priority' => 500,
+				'priority' => 500,//event_Calendar are at 150.
 			);
 			$return = array(); // new empty array, remove all other options
 		    $return[] = ElggMenuItem::factory($options);
@@ -329,7 +329,7 @@ function divelog_entity_menu_setup ($hook, $type, $return, $params) {
 					'text' => elgg_echo('divelog:copy'),
 					'title' => elgg_echo('divelog:copy_hint'),
 					'href' => elgg_add_action_tokens_to_url("action/divelog/copy_divelog?guid={$entity->guid}"),
-					'priority' => 500,
+					'priority' => 150,
 				);
 				//$return = array(); // new empty array, remove all other options
 			    $return[] = ElggMenuItem::factory($options);

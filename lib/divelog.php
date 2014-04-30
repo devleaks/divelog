@@ -4,6 +4,8 @@
  *
  * @package Divelog
  */
+if (is_plugin_enabled('event_calendar'))
+	elgg_load_library('elgg:event_calendar');
 
 /**
  * Get a user unit sysmtem preference. If none exists for user, use system default.
@@ -127,7 +129,7 @@ function get_future_divelog_events($existing_planned_divelog_guids) {
 	);
 	$events = elgg_get_entities_from_metadata($options);
 	if(!$events)
-		return "there are no dive events";
+		return false;
 	
 	$icon = '<img src="'.elgg_get_site_url().'mod/divelog/graphics/divelog.png" />';
 
@@ -163,13 +165,18 @@ function get_future_divelog_events($existing_planned_divelog_guids) {
 	
 		$subtitle = "$author_text $date $comments_link $categories";
 
-		$metadata = elgg_view_menu('entity', array(
+		$metadata = elgg_view_menu('entity', array(	// regular event entity menu to register to dive, etc.
+			'entity' => $event,
+			'handler' => 'event_calendar',
+			'sort_by' => 'priority',
+			'class' => 'elgg-menu-hz',
+		));
+		$metadata .= elgg_view_menu('entity', array(// "Convert event(in future) to dive(planned)"
 			'entity' => $event,
 			'sort_by' => 'priority',
 			'class' => 'elgg-menu-hz',
 			'handler' => 'divelog_convert',
 		));
-		//$metadata = '';
 	
 		list($dive_date_fmt_long, $dive_date_fmt_short, $dive_time_fmt) = format_date($event->start_date);	
 

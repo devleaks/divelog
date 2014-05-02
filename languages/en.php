@@ -104,7 +104,7 @@ View and comment on the new dive log:
 	'divelog:prompt:dive_date' => 'When:',
 	'divelog:prompt:dive_with' => 'Buddies:',
 	'divelog:prompt:dive_briefing' => 'Briefing:',
-	'divelog:prompt:dive_note' => 'Debriefing:',
+	'divelog:prompt:dive_debriefing' => 'Debriefing:',
 
 	// Filter headings
 	"divelog:filter:friend" => "Friend's dives",
@@ -167,6 +167,7 @@ View and comment on the new dive log:
 	'divelog:upload:see_divelogs' => "View all my dives",
 	'divelog:upload:see_divelog' => "View divelog",
 	'divelog:upload:new' => "%s uploaded new dives.",
+	'divelog:download' => "Donwload my logbook",
 
 
 	/**
@@ -174,6 +175,9 @@ View and comment on the new dive log:
 	 */
 	'divelog:same_dive:intro' => "These contacts reported the same dive: ",
 	'divelog:club_dive:intro' => "These contacts reported dives at the same time and place: ",
+	'divelog:no_same_dive' => "No equivalent dive.",
+	'divelog:no_club_dive' => "No dive on site site on same day.",
+	'divelog:same_site' => "Dives on same site",
 	
 
 	/**

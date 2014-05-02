@@ -11,4 +11,3 @@
 echo $vars['report'];
 echo elgg_view('input/securitytoken');
 echo elgg_view('input/submit', array('value' => elgg_echo('divelog:upload:delete_divelogs')));
-?>

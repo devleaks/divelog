@@ -5,12 +5,14 @@
  * @package Divelog
  */
 // once elgg_view stops throwing all sorts of junk into $vars, we can use extract()
-$units = get_user_units();
 
 $dive_site = elgg_extract('dive_site', $vars, '');
 $dive_date = elgg_extract('dive_date', $vars, 0);
 $dive_start_time = elgg_extract('dive_start_time', $vars, 0);
 $dive_depth = elgg_extract('dive_depth', $vars, '');
+
+$units = elgg_extract('units', $vars, get_user_units());
+
 $dive_duration = elgg_extract('dive_duration', $vars, '');
 $dive_buddies = elgg_extract('dive_buddies', $vars, '');
 $dive_briefing = elgg_extract('dive_briefing', $vars, '');
@@ -46,9 +48,8 @@ $dive_in_future = ( ($dive_date + $dive_start_time*60) > time());
 <!--
 <?php //echo elgg_view("event_calendar/input/date_local",array('timestamp'=>TRUE, 'autocomplete'=>'off','class'=>'event-calendar-compressed-date','name' => 'dive_date','value'=>$dive_date));?>
 -->
-
     <label><?php echo elgg_echo("divelog:date"); ?></label><br />
-    <?php echo elgg_view("input/date",array('name' => 'dive_date','value'=>$dive_date));?>
+    <?php echo elgg_view("input/date",array('name' => 'dive_date','value'=>($dive_date+86400))); // TO BE CHECKED!! ?>
 	<?php echo elgg_view("input/timepicker",array('name' => 'dive_start_time','value'=>$dive_start_time));?>
 </div>
 

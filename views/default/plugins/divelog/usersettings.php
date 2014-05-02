@@ -28,22 +28,27 @@ $user_units = get_user_units();
 		'value' => $user_units,
 	));
 	echo '<p></p>';
+	/* later...
 	echo elgg_view('input/checkbox', array(
 		'name' => 'params[create_from_event]',
 		'checked' => $create_from_event ? $create_from_event : false,
 	));
 	echo elgg_echo('divelog:create_from_event') . ' ';
-?>
-</div>
-<p></p>
-<p></p>
-<div>
-<?php
+	echo '<p></p>';
+	*/
 	echo elgg_view_icon('divelog');
 	echo '&nbsp;&nbsp;';
 	echo elgg_view('output/url', array(
 				'href' => elgg_get_site_url().'divelog/upload',
 				'text' => elgg_echo('divelog:upload:linktopage'),
 				'title' => elgg_echo('divelog:upload:linktopagehelp'),
+			));
+	echo '<p></p>';
+	echo elgg_view_icon('divelog');
+	echo '&nbsp;&nbsp;';
+	echo elgg_view('output/url', array(
+				'href' => elgg_get_site_url().'divelog/download',
+				'text' => elgg_echo('divelog:download'),
+				'title' => elgg_echo('divelog:download'),
 			));?>	
 </div>

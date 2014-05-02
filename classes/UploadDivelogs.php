@@ -107,7 +107,6 @@ class UploadDivelogs {
 		
 		$headers[] = 'status';
 		$this->headers = $headers;
-		//var_dump($headers);
 
 		/// Check that at least divelog date and site are provided in the headers
 		if (!in_array('date', $headers) ||
@@ -261,15 +260,32 @@ class UploadDivelogs {
 				$new_divelog->dive_duration = $divelog['duration'];
 				$new_divelog->units = $user_units;
 				$new_divelog->dive_buddies = $divelog['buddies'];
-				$new_divelog->dive_debriefing = $divelog['notes'];
 				$new_divelog->access_id = (int)$divelog['access'];
 				$new_divelog->tags = string_to_tag_array($divelog['tags']);
 				$new_divelog->title = elgg_view('object/dive_text', array('entity'=>$new_divelog, 'mode'=>'title'));
 				$new_divelog->description = elgg_view('object/dive_text', array('entity'=>$new_divelog, 'mode'=>'description'));
 
+				// parse notes if exported with divelog
+				$idx = strpos($divelog['notes'], DIVELOG_NOTE_SEPARATOR);				
+				if($idx == 0) { // notes starts with +++, no briefing, may be debriefing
+					$tmp = substr($divelog['notes'], strlen(DIVELOG_NOTE_SEPARATOR));
+					$new_divelog->dive_debriefing = ($tmp ? $tmp : '');
+				} else if($idx) {
+					$tmp = substr($divelog['notes'], 0, $idx);
+					$new_divelog->dive_briefing = ($tmp ? $tmp : '');
+					$tmp = substr($divelog['notes'], $idx + strlen(DIVELOG_NOTE_SEPARATOR));
+					$new_divelog->dive_debriefing = ($tmp ? $tmp : '');
+				} else
+					$new_divelog->dive_debriefing = $divelog['notes'];
+
+
 				$guid = $new_divelog->save();
 				if ($guid) {
-					//add_to_river('river/divelog/create', 'create', $user->guid, $guid);
+					
+					set_divelog_galleries($new_divelog);
+					set_divelog_related_dives($new_divelog);
+
+					//add_to_river('river/object/divelog/create', 'create', $user->guid, $guid); // too many lines for new dives...
 					if(    $upload_guid
 						&& !check_entity_relationship($upload_guid, "divelog_upload", $new_divelog->getGUID())
 					  )
@@ -290,10 +306,9 @@ class UploadDivelogs {
 		}
 		$this->creation_report = $final_report;
 		if($upload_guid) {
-			add_to_river('river/divelog_upload/create', 'create', $user->guid, $new_upload->getGUID());
-			echo 'done!';
+			; // add_to_river('river/object/divelog_upload/create', 'create', $user->guid, $upload_guid);
 		} else {
-			echo "not not not done.";
+			echo elgg_echo('divelog:upload:error');
 		}
 		return true;
 	}

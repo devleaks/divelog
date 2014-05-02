@@ -54,7 +54,8 @@ switch($mode) {
 			$str .= print_null(dive_params($divelog, $mode), "<br/>", elgg_echo("divelog:prompt:dive_data"), ".",
 								elgg_echo("divelog:no_dive_params"));
 			$str .= print_null($buddies_display, "<br/>", elgg_echo("divelog:prompt:dive_with"), ".");				
-			$str .= print_null($divelog->dive_debriefing, "<br/>", elgg_echo("divelog:prompt:dive_note"));
+			$str .= print_null($divelog->dive_briefing, "<br/>", elgg_echo("divelog:prompt:dive_briefing"));
+			$str .= print_null($divelog->dive_debriefing, "<br/>", elgg_echo("divelog:prompt:dive_debriefing"));
 		} else {
 			$str .= ' ('.elgg_echo("divelog:planned").').';
 			$str .= print_null($divelog->dive_briefing, "<br/>", elgg_echo("divelog:prompt:dive_briefing"));

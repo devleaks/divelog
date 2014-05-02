@@ -79,6 +79,7 @@ if ($full && !elgg_in_context('gallery')) {
 		'subtitle' => $subtitle,
 	);
 	$params = $params + $vars;
+	
 	$summary = elgg_view('object/elements/summary', $params);
 
 	$divelog_icon = elgg_view_icon('divelog');
@@ -97,9 +98,11 @@ HTML;
 	));
 
 	if (!$dive_in_future && is_plugin_enabled('hypeGallery')) {
-		echo elgg_view('object/gallery', array('entity' => $divelog));
+		echo elgg_view('object/gallery', array('entity' => $divelog, 'verbose' => false));
 	}
 	
+	echo elgg_view('object/related', array('entity' => $divelog, 'verbose' => false));
+
 //////////////////
 //Gallery
 //

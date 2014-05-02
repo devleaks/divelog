@@ -138,6 +138,11 @@ function divelog_page_handler($page) {
 			include "$pages/buddy.php";
 			break;
 
+		case "site":
+			set_input('guid', $page[1]);
+			include "$pages/site.php";
+			break;
+
 		case "view":
 			set_input('guid', $page[1]);
 			include "$pages/view.php";
@@ -151,6 +156,11 @@ function divelog_page_handler($page) {
 		case "add":
 			gatekeeper();
 			include "$pages/add.php";
+			break;
+
+		case "download":
+			gatekeeper();
+			include "$pages/download.php";
 			break;
 
 		case "upload":

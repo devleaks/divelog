@@ -4,6 +4,7 @@ Dive Logbook
 Record dives in a logbook and share them with friends.
 
 
+
 ## Features ##
 
 The current logbook records basic dive data such as dive site, duration, depth reached, dive buddies,
@@ -15,11 +16,13 @@ When a dive buddy is an Elgg user, it appears as a link to his or her logbook.
 The divelog module may be integrated with two other modules: event_calendar and hypeGallery.
 
 
+
+
 # User's Manual #
 
 
-## Tabs ##
 
+## Tabs ##
 
 #### All Dives ####
 
@@ -55,11 +58,20 @@ Displays a few statistics about your dives.
 
 ### River and Dive Details ###
 
-In river and divelog titles, date is made as short as possible.
-For instance, date year does not appear for date less than 6 months ago.
+River brief information includes:
+
+Divelog titles, and date made as short as possible. For instance, date year does not appear for date less than 6 months ago.
+
+Dive details includes:
+
+* Dive details as recorded, such as dive date and site, depth reached, dive duration, and buddies,
+* Picture albums that were taken,
+* Related dives, such as the same dive as recorded by your dive buddies, or other dives the same day, at the same site, or other dives at the same dive site.
+
 
 
 ## Preferences ##
+
 
 ### Site/Module Preferences ###
 
@@ -67,6 +79,7 @@ The administrator of a site can set the default, site-wide unit system in use (_
 
 The Unit system is saved with each dive.
 (When the Unit system is changed, no convertion occurs on existing recoreded values.)
+
 
 ### User/Module Preferences ###
 
@@ -98,8 +111,6 @@ Date must be in the DD/MM/YYYY format. Hours must be in the HH:MM where HH is in
 
 Units used in the CSV file (for depth) must match unit set for current user.
 
-Notes: Import may fail depending on your global PHP local settings for data/number format.
-
 
 If the first line does not contain column headings, all columns must be present and MUST be in the following order:
 
@@ -114,12 +125,20 @@ of the file contains field names or not.
 - Second, the user accept divelog candidates and divelogs are effectively created.
 - Finally, a creation report list imported dives.
 
+If dive notes are a concatenation of briefing and debriefing notes, they are split. (See below.)
+
+#### Export Dives ####
+
+Press _Donwload my logbook_ to download a comma separated values of all your dives.
+
+There is currently no possibility to download selected dives. All dives are downloaded.
+Briefing and debriefing fields are concatenated in a note field, separated by '+++'.
 
 
 ### Interface to event_calendar Module ###
 
-Event_calendar is a general purpose event and calendar module.
-It allows users to add new events or register (partcipate) to existing ones.
+**Event_calendar** is a general purpose event and calendar module.
+It allows users to add new events or register (participate) to existing ones.
 
 If enabled on your Elgg site, the **event_calendar** module will work with divelog.
 
@@ -131,10 +150,15 @@ Users of Elgg will be able to create a special type of event (_dives_),
 and there will be an automatic conversion of such a dive _event_ to a loggued dive in your logbook.
 
 
+Event Calendar Field | Divelog Requirement
+--- | ---
+Event Type | divelog.
+Date | Must be in the future.
+
 
 ### Interface to hypeGallery Module ###
 
-**hypeGallery** is a general purpose Photo gallery application.
+**hypeGallery** is a general purpose Photo gallery module.
 
 If you posted pictures of the dive on Elgg, and checked the "Dive Pictures & Videos" checkbox in your logbook,
 divelog will establish a relationship between your divelog and your dive pictures in your logbook.
@@ -149,7 +173,8 @@ date | Must correspond to the 'dive_date' of divelog.
 categories | Must contain the text _divelog_.
 
 
-A link will appears in the dive detail page to point at recorded pictures or videos.
+Thumbnails will be displayed in the dive detail page
+with a link to recorded pictures.
 
 
 
@@ -266,7 +291,7 @@ If two dives have
 they are said to be dives from the _same club dives_ and are linked together.
 
 ```php
-add_entity_relationship($divelog_GUID, "divelog_club_dive", $album_GUID)
+add_entity_relationship($divelog_GUID, "divelog_club_dive", $divelog_of_buddy_GUID)
 ```
 
 
@@ -278,10 +303,10 @@ If in addition to the above,
   * the dive depth is about the same (within a reasonable depth difference),
   * the duration of the dive is about the same (within a reasonable duration difference),
 
-they are said to be the _same dive_ (recorded by two buddies) and are linked together.
+they are said to be the _same dive_ (recorded by two or more buddies) and are linked together.
 
 ```php
-add_entity_relationship($divelog_GUID, "divelog_same_dive", $album_GUID)
+add_entity_relationship($divelog_GUID, "divelog_same_dive", $divelog_of_buddy_GUID)
 ```
 
 
@@ -291,9 +316,11 @@ add_entity_relationship($divelog_GUID, "divelog_same_dive", $album_GUID)
 Importing CSV files has not been extensively tested. Issues remains and will be addressed in future releases.
 If sticking to stated rules above, should work smoothly. But exceptions are not handled.
 
+Export CSV files needs work on brieifing and debiefing notes. Elgg stores them as HTML code.
+We need to transform them as regular text. Work is in progress.
 
 
-## To Do ##
+## To Do's ##
 
 The core of this module is the Bookmarks module, with a kind of a global substitution of the word Divelog for Bookmark.
 After, a few features were slowly added, like convertion of Events to Divelogs, or link to hypeGallery,
@@ -309,13 +336,11 @@ This is a first Elgg specific development, so some Elgg conventions may not be r
 * Auto create(/delete) divelog upon event calendar subscription (user use requested it.)
 * User: Automatically insert a new divelog (planned dive) when user confirm registration to events of type `event_calendar:type:divelog`?
 * User: Accept new divelog from buddies when they create a new dive log and I am listed a buddy and I have not added the dive yet.
-* Create 'club_dive' and 'same_dive' relationships. Display these relationships in Dive details.
 * Update relations to hypeGallery album when they are created, updated, or deleted.
 * Be nice to other modules and provide hooks on divelog creation, update, deletion (if requested.)
 
 
 ### Development ###
 
-* Tokenize dive sites so that people use same name for the same site (easier to normalize...)
 * Migrate to Elgg 1.9.
 * Migrate objects to namespace. (Will be completed with Elgg 1.9 migration.)

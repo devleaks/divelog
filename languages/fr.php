@@ -104,7 +104,7 @@ Voir et commenter cette plongée:
 	'divelog:prompt:dive_date' => 'Quand:',
 	'divelog:prompt:dive_with' => 'Palanquée:',
 	'divelog:prompt:dive_briefing' => 'Briefing:',
-	'divelog:prompt:dive_note' => 'Notes:',
+	'divelog:prompt:dive_debriefing' => 'Notes:',
 	
 	// Filter messages
 	"divelog:filter:friend" => "Les plongées de mes contacts",
@@ -167,13 +167,17 @@ Les colonnes ou champs notes, access et tags sont optionnelles. Les autres sont 
 	'divelog:upload:see_divelogs' => "Voir toutes mes plongées",
 	'divelog:upload:see_divelog' => "Voir la plongée",
 	'divelog:upload:new' => "a chargé %s nouvelles plongées dans son carnet.",
+	'divelog:download' => "Télécharger les plongées de mon carnet",
 
 
 	/**
 	 * Related dives
 	 */
-	'divelog:same_dive:intro' => "Ces contacts ont rapporté la même plongée: ",
-	'divelog:club_dive:intro' => "Ces contacts ont plongé près de vous: ",
+	'divelog:same_dive:intro' => "La même plongée vue par ",
+	'divelog:club_dive:intro' => "Plongées sur le même site, le même jour: ",
+	'divelog:no_same_dive' => "Personne n'a rentré une plongée similaire.",
+	'divelog:no_club_dive' => "Il n'y a pas de plongée sur le même site, le même jour.",
+	'divelog:same_site' => "Toutes les plongées sur le même site",
 	
 
 	/**

@@ -22,7 +22,6 @@ $tagarray = string_to_tag_array(get_input('tags'));
 
 $access_id = get_input('access_id');
 $guid = get_input('guid');
-$share = get_input('share');
 $container_guid = get_input('container_guid', elgg_get_logged_in_user_guid());
 
 if (elgg_is_active_plugin('elgg_tokeninput')) {	// if using token input, a string with comma like 'A, B, C'
@@ -52,6 +51,7 @@ if($datets = strtotime($dive_date)) {
 } else {
 	$divelog->dive_date = $dive_date;
 }
+
 $divelog->dive_site = $dive_site;
 $divelog->dive_start_time = $dive_start_time;
 $divelog->dive_depth = $dive_depth;
@@ -63,7 +63,10 @@ $divelog->dive_briefing = $dive_briefing;
 $divelog->dive_suggestor = elgg_get_logged_in_user_guid();
 $divelog->tags = $tagarray;
 
-$divelog->units = get_user_units();
+if ($divelog->getOwnerGUID() == elgg_get_logged_in_user_guid()) {
+	// if admin edits and has different unit system, we cannot update unit of dive of other user...
+	$divelog->units = get_user_units();
+}	// else, dive exists and is owned by another user, we don't touch it.
 
 $divelog->title = elgg_view('object/dive_text', array('entity'=>$divelog, 'mode'=>'title'));
 $divelog->description = elgg_view('object/dive_text', array('entity'=>$divelog, 'mode'=>'description'));
@@ -74,13 +77,6 @@ if ($divelog->save()) {
 
 	elgg_clear_sticky_form('divelog');
 
-	// @todo
-	if (is_array($shares) && sizeof($shares) > 0) {
-		foreach($shares as $share) {
-			$share = (int) $share;
-			add_entity_relationship($divelog->getGUID(), 'share', $share);
-		}
-	}
 	// save reference in buddy relationships
 	if($dive_buddies != '') {
 		$dive_buddies = explode(',', $buddy_list);

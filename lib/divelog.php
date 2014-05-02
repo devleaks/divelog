@@ -4,6 +4,8 @@
  *
  * @package Divelog
  */
+define('DIVELOG_NOTE_SEPARATOR', '+++');
+
 if (is_plugin_enabled('event_calendar'))
 	elgg_load_library('elgg:event_calendar');
 
@@ -212,16 +214,6 @@ function get_future_divelog_events($existing_planned_divelog_guids) {
 
 
 /**
- * Establish relationships "divelog_club_dive" and "divelog_same_dive" to other divelogs.
- *
- * @param ElggObject $divelog A divelog object.
- */
-function set_divelog_related_dives($divelog) {
-	//todo
-}
-
-
-/**
  * Create relationship "divelog_media" between divelog and hype galleries.
  *
  * @param ElggObject $divelog A divelog object.
@@ -271,8 +263,14 @@ function dive_params($divelog, $mode) {
 		 || ($divelog->dive_depth    == '')
 		 || ($divelog->dive_duration == '')		) return ''; // dive in future or no param entered.
 	$short = ($mode == "full") ? '' : 'short:';
-	return $divelog->dive_duration. " " . elgg_echo("divelog:".$short."duration_unit")
-		. " " . elgg_echo("divelog:dive_at") . " " . $divelog->dive_depth . " " . elgg_echo("divelog:".$short."depth_".$divelog->units);
+	$str = $divelog->dive_duration. " " . elgg_echo("divelog:".$short."duration_unit");
+	$str .= " " . elgg_echo("divelog:dive_at") . " " . $divelog->dive_depth . " " . elgg_echo("divelog:".$short."depth_".$divelog->units);
+	$user_units = get_user_units();
+	if($user_units != $divelog->units) {	
+		$dive_depth = round( ($divelog->units == "metric") ? $divelog->dive_depth * (12*0.254) : $divelog->dive_depth / (12*0.254) );
+		$str .= " (" . $dive_depth . " " . elgg_echo("divelog:".$short."depth_".$user_units).")";
+	}
+	return $str;
 }
 
 
@@ -344,32 +342,157 @@ function get_buddy_list($buddy_list) {
  * @param check_params [true|false], default false. Whether to compare dive parameters as well.
  * @return [true|false].
  */
-function same_dive($d1, $d2, $check_params = false) {
-	function same_site($conf) {
-		$ret = similar_text($d1->dive_site, $d2->dive_site, $pct);
-		return ($pct > $conf);
-	}
+function same_dive_site($d1, $d2, $threshold) {
+	if($d1 == $d2) return true; // with dive site normalization, this should work often
+	$ret = similar_text($d1->dive_site, $d2->dive_site, $pct);
+	//echo 'site site pct='.$pct.'/'.$threshold.', ';
+	return ($pct > $threshold);
+}
 
-	function about_same_time($same_hour) {
-		$t1 = $d1->dive_date + $d1->dive_start_time*60;
-		$t2 = $d2->dive_date + $d2->dive_start_time*60;
-		$tdiff = abs($t1 - $t2);
-		return ($tdiff < ($same_hour * 60 * 60));
+function same_dive_params($d1, $d2) {
+	$ALLOWED = array( 	//allowed differences between two dives to be considered the same dive:
+		'start' => 16,	// minutes->seconds, , time increment in save time UI is 15min, so we allow "16 minutes" difference...
+		'duration' => 5,// minutes
+		'depth' => 5,	// meters
+	);
+
+	$tdiff = abs($d1->dive_start_time - $d2->dive_start_time);
+	$same_start_time = ($tdiff < $ALLOWED['start']);
+	//echo 'time difference='.$tdiff.'/'.$ALLOWED['start'].'('.($same_start_time ? 'true' : 'false').'), ';
+
+	$durdiff = abs($d1->dive_duration - $d2->dive_duration);
+	$same_duration = ($durdiff < $ALLOWED['duration']);
+	//echo 'duration difference='.$durdiff.'/'.$ALLOWED['duration'].'('.($same_duration ? 'true' : 'false').'), ';
+	if ($d1->units != $d2->units) {
+		//echo '..different units..';
+		$dd1 = ($d1->units == 'metric') ? $d1->dive_depth : $d1->dive_depth / (12*0.254);
+		$dd2 = ($d2->units == 'metric') ? $d2->dive_depth : $d2->dive_depth / (12*0.254);
+		$dptdiff = round(100*abs($dd1 - $dd2))/100;
+	} else {
+		//echo '..same unit..';
+		$dptdiff = abs($d1->dive_depth - $d2->dive_depth);
 	}
+	$same_depth = ($dptdiff < $ALLOWED['depth']);
+	//echo 'depth difference='.$dptdiff.'/'.$ALLOWED['depth'].'('.($same_depth ? 'true' : 'false').'), ';
+
+	return ($same_start_time && $same_depth && $same_duration); // in minutes
+}
+
+function cross_buddies($d1, $d2) {
+	$diver = $d1->getOwnerEntity();
+	$buddies = explode(',', strtolower($d2->dive_buddies));
+	$ret = in_array(strtolower($diver->username), $buddies);
+	//echo 'checking for '.$diver->username.'in'.$d2->dive_buddies.':'.($ret ? 'true' : 'false');
+	return $ret;
+}
+
+/**
+ * Establish relationships "divelog_club_dive" and "divelog_same_dive" to other divelogs.
+ *
+ * @param ElggObject $divelog A divelog object.
+ */
+function set_divelog_related_dives($divelog) {
+	$ALLOWED = array( 		//allowed differences between two dives to be considered "related":
+		'time' => 4 * 60,	// hours in minutes (*60)
+		'site' => 80,		// % confidence two strings are the same (see php(1) manual, function similar_text)
+	);
+
+	$options = array(
+		'type' => 'object',
+		'subtype' => 'divelog',
+		'limit' => 20,
+		'metadata_name_value_pairs' => array(
+			array(
+				'name' => 'dive_date',
+				'value' => $divelog->dive_date,
+				'operand' => '='
+			),
+			array(
+				'name' => 'dive_start_time',
+				'value' => ($divelog->dive_start_time - $ALLOWED['time']),
+				'operand' => '>'
+			),
+			array(
+				'name' => 'dive_start_time',
+				'value' => ($divelog->dive_start_time + $ALLOWED['time']),
+				'operand' => '<'
+			),
+		),
+	);
 	
-	function same_params($dpt, $dur) {
-		$durdiff = abs($d1->dive_duration - $d2->dive_duration);
-		if ($d1->units != $d2->units) {
-			$dd1 = ($d1->units == 'metric') ? $d1->dive_depth : $d1->dive_depth / (12*0.254);
-			$dd2 = ($d2->units == 'metric') ? $d2->dive_depth : $d2->dive_depth / (12*0.254);
-			$dptdiff = abs($dd1 - $dd2);
-		} else
-			$dptdiff = abs($d1->dive_depth - $d2->dive_depth);
+	//reset all relationships
+	//echo 'cleaning '.$divelog->title.'('.$divelog->getGUID().')'.'...';
+	//remove_entity_relationships($divelog->getGUID(), "divelog_same_dive", true);
+	remove_entity_relationships($divelog->getGUID(), "divelog_same_dive", false);
+	//remove_entity_relationships($divelog->getGUID(), "divelog_club_dive", true);
+	remove_entity_relationships($divelog->getGUID(), "divelog_club_dive", false);
+	//echo 'done.</br>';
 
-		return (($dptdiff < $dpt) && ($durdiff < $dur));
-	}
+	// $content =  elgg_list_entities_from_metadata($options);
+	if($candidate_divelogs =  elgg_get_entities_from_metadata($options)) {
+		foreach($candidate_divelogs as $dive) {
+			//echo 'testing '.$dive->title.'('.$dive->getGUID().')'.' by '.$dive->getOwnerEntity()->username.'...';
 
-	$same_param = $check_params ? same_param() : true;
-	
-	return( same_site(70) && about_same_time(2) && $same_params);
+			if($divelog->getGUID() != $dive->getGUID()) {		
+				$ret1 = cross_buddies($divelog, $dive);
+				$ret2 = cross_buddies($dive, $divelog);
+				if($ret1 && $ret2) { // same dive
+					//echo 'buddies cross-checked...';
+					if( same_dive_params($divelog, $dive) ) {
+						//echo 'same params...';
+						if (!check_entity_relationship($divelog->getGUID(), "divelog_same_dive", $dive->getGUID())) {
+							add_entity_relationship($divelog->getGUID(), "divelog_same_dive", $dive->getGUID());
+							//echo 'added divelog_same_dive...';
+						} else {
+							//echo 'already divelog_same_dive...';
+						}
+						if (check_entity_relationship($divelog->getGUID(), "divelog_club_dive", $dive->getGUID())) {
+							remove_entity_relationship($divelog->getGUID(), "divelog_club_dive", $dive->getGUID());
+							//echo '(and removed divelog_club_dive)...';
+						}
+					} else {
+						if( same_dive_site($divelog, $dive, $ALLOWED['site']) ) {
+							if (!check_entity_relationship($divelog->getGUID(), "divelog_club_dive", $dive->getGUID())) {
+								add_entity_relationship($divelog->getGUID(), "divelog_club_dive", $dive->getGUID());
+								//echo 'added divelog_club_dive...';
+							} else {
+								//echo 'already divelog_club_dive...';
+							}
+							if (check_entity_relationship($divelog->getGUID(), "divelog_same_dive", $dive->getGUID())) {
+								remove_entity_relationship($divelog->getGUID(), "divelog_same_dive", $dive->getGUID());
+								//echo '(and removed divelog_same_dive)...';
+							}
+						}
+					}
+				} else if( same_dive_site($divelog, $dive, $ALLOWED['site']) ) {
+					//echo 'same site...';
+					if( same_dive_params($divelog, $dive) ) {
+						//echo 'same params...';
+						if (!check_entity_relationship($divelog->getGUID(), "divelog_same_dive", $dive->getGUID())) {
+							add_entity_relationship($divelog->getGUID(), "divelog_same_dive", $dive->getGUID());
+							//echo 'added divelog_same_dive...';
+						} else {
+							//echo 'already divelog_same_dive...';
+						}
+						if (check_entity_relationship($divelog->getGUID(), "divelog_club_dive", $dive->getGUID())) {
+							remove_entity_relationship($divelog->getGUID(), "divelog_club_dive", $dive->getGUID());
+							//echo '(and removed divelog_club_dive)...';
+						}
+					} else {
+						if (!check_entity_relationship($divelog->getGUID(), "divelog_club_dive", $dive->getGUID())) {
+							add_entity_relationship($divelog->getGUID(), "divelog_club_dive", $dive->getGUID());
+							//echo 'added divelog_club_dive...';
+						} else {
+							//echo 'already divelog_club_dive...';
+						}
+						if (check_entity_relationship($divelog->getGUID(), "divelog_same_dive", $dive->getGUID())) {
+							remove_entity_relationship($divelog->getGUID(), "divelog_same_dive", $dive->getGUID());
+							//echo '(and removed divelog_same_dive)...';
+						}
+					}
+				} //else echo 'nop! ';
+			} //else echo 'exact same dive, ignoring...';
+			//echo 'done.<br/>';
+		}
+	} // else echo 'no candidate_divelogs';
 }

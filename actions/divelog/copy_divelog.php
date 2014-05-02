@@ -30,13 +30,6 @@ if (elgg_instanceof($divelog_src, 'object', 'divelog')) {
 	$divelog->description		= elgg_view('object/dive_text', array('entity'=>$divelog_src, 'mode'=>'description'));
 
 	if ($divelog->save()) {
-		if (is_array($shares) && sizeof($shares) > 0) {
-			foreach($shares as $share) {
-				$share = (int) $share;
-				add_entity_relationship($divelog->getGUID(), 'share', $share);
-			}
-		}
-		
 		if (!check_entity_relationship($divelog->getGUID(), "divelog_club_dive", $divelog_src->getGUID()))
 			add_entity_relationship($divelog->getGUID(), "divelog_club_dive", $divelog_src->getGUID());
 		

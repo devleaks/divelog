@@ -45,13 +45,6 @@ if (	elgg_instanceof($event, 'object', 'event_calendar')
 	$divelog->description = $event->brief_description;
 
 	if ($divelog->save()) {
-		if (is_array($shares) && sizeof($shares) > 0) {
-			foreach($shares as $share) {
-				$share = (int) $share;
-				add_entity_relationship($divelog->getGUID(), 'share', $share);
-			}
-		}
-		
 		if (!check_entity_relationship($divelog->getGUID(), "divelog_event_calendar", $event->getGUID()))
 			add_entity_relationship($divelog->getGUID(), "divelog_event_calendar", $event->getGUID());
 		

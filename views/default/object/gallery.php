@@ -10,6 +10,7 @@ if (! is_plugin_enabled('hypeGallery'))
 elgg_load_library('divelog');
 
 $divelog = elgg_extract('entity', $vars, FALSE);
+$debug = elgg_extract('verbose', $vars, FALSE);
 
 if (!$divelog) {
 	return;
@@ -49,6 +50,6 @@ if ($galleries) {
 			echo elgg_view('object/hjalbum', array('entity' => $gallery, 'list_type' => 'river'));
 			elgg_pop_context();
 		}
-} else {
+} else if ($debug) {
 	echo elgg_echo('divelog:nogallery');
 }
